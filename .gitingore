@@ -1,0 +1,19 @@
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Builds
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+
+# Unity（使うなら）
+[Ll]ibrary/
+[Tt]emp/
+obj/
+*.csproj
+*.sln
