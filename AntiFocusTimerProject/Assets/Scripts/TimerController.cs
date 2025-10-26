@@ -4,78 +4,48 @@ using UnityEngine.EventSystems;
 
 public class TimerController : MonoBehaviour
 {
-
     [Header("Settings")]
     [Tooltip("巻ける最大時間（秒）")]
-    public float maxSeconds = 3600f; // 60分
-   // [Tooltip("走行中の手巻き許可（キッチンタイマー実機に寄せるなら true）")]
-  //  public bool allowWindWhileRunning = true;
+    public float maxSeconds;
 
     [Header("State (ReadOnly)")]
-    [SerializeField] private float remainingSeconds; //ダイヤルを回して指を話したら減り始める時間のこと
+    [SerializeField] private float remainingSeconds; // 残り時間
     [SerializeField] private bool running;
 
     [Header("Events")]
-    public UnityEvent onElapsed;        //経過
-    public UnityEvent<int> onTickIntSeconds; // 毎秒の整数カウント用（任意）I
+    public UnityEvent onElapsed;                 // 0になった時
+    public UnityEvent<int> onTickIntSeconds;     // 毎秒コールバック（任意）
 
     [Header("Refs")]
-    /// public Timer timer;
-    public Transform dialVisual; // ダイアル見た目（回転させるTransform）
-
-   // [Header("Mapping")]
-   // [Tooltip("フルに巻いた時の目盛り角度（12時→反時計回りに何度まで行けるか）。多くの調理タイマーは1周=最大。")]
-    //public float maxSweepDegrees = 360f;
-
-    [Tooltip("角度→秒の換算。例: 360度=3600秒なら 10sec/deg。")]
-    public float secondsPerDegree = 10f;
-
-
-      private bool allowWindWhileRunning = true;
-    [Tooltip("タイマーの軸の中心")]
+    public Transform dialVisual;                 // ダイアル見た目（回転させるTransform）
+    [Tooltip("タイマーの軸の中心（UIの場合にRectTransformで指定）")]
     public RectTransform dialAxis;
-    private bool dragging;
-    private float accumulatedWindSeconds; // このドラッグで巻いた総秒数（指を離した時にWind）
-    private Camera uiCam; // 必要なら割当（ワールド/スクリーン次第）
 
-    private float startRemainingSeconds;      // ドラッグ開始時の残り時間
-
-    //[SerializeField] float maxSeconds = 300f; // 例：5分＝300秒
-    private float SecondsPerDegree => maxSeconds / 3600f;
-
-
+    // 内部
+    private Camera uiCam;                        // 必要なら割当（UIカメラ/メインカメラ）
     private int lastEmittedWhole;
 
-    public float RemainingSeconds => remainingSeconds;
-    //public float Normalized => maxSeconds <= 0f ? 0f : Mathf.Clamp01(remainingSeconds / maxSeconds);
-    //public bool IsRunning => running;
-    private float prevAngleCW;                // 前フレームの角度(12時基準/時計回り正)
+    // ドラッグ関連
+    private bool isDragging;
+    private float startRemainingSeconds;         // ドラッグ開始時の残り時間
+    private float accumulatedWindSeconds;        // ドラッグ中に増減した秒
+    private float prevAngleCW;                   // 前フレーム角度（12時基準/時計回り正）
+
+    // 1度あたりの秒（maxSeconds を 360度に割り当て）
+    private float SecondsPerDegree => maxSeconds / 360f;
+
     private void Awake()
     {
         if (dialVisual == null) dialVisual = transform;
         uiCam = Camera.main;
-    }
-    public void SetRemaingingTime(float seconds)
-    {
-
-    }
-
-    void StopTick() => running = false;
-
-    void ResetTick()
-    {
-        running = false;
-        remainingSeconds = 0f;
+        ApplyDialFromSeconds(remainingSeconds);
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
     }
 
-    void ControllDial()
-    {
-
-    }
     private void Update()
     {
         if (!running) return;
+
         if (remainingSeconds > 0f)
         {
             remainingSeconds -= Time.deltaTime;
@@ -83,87 +53,126 @@ public class TimerController : MonoBehaviour
             {
                 remainingSeconds = 0f;
                 running = false;
-                onElapsed?.Invoke();        //onElapsed = 経過した　らイベント発生させる？
+                onElapsed?.Invoke();
             }
+
+            // ダイアルを残り時間に合わせて戻す（＝キッチンタイマーの針が12時に戻る）
+            ApplyDialFromSeconds(remainingSeconds);
+
             // 毎秒イベント（任意）
-            int nowWhole = Mathf.CeilToInt(remainingSeconds);       //整数にまとめる
+            int nowWhole = Mathf.CeilToInt(remainingSeconds);
             if (nowWhole != lastEmittedWhole)
             {
                 lastEmittedWhole = nowWhole;
-                onTickIntSeconds?.Invoke(Mathf.Max(0, nowWhole));   //設定毎秒ごとにイベント発生させる？
+                onTickIntSeconds?.Invoke(Mathf.Max(0, nowWhole));
             }
         }
     }
 
-    private float currentTime;
-    private bool isDragging;
+    //=== Drag API（EventTriggerや独自呼び出し想定） =========================
 
     public void OnDragStart(PointerEventData e)
     {
-        Debug.Log("OnDragStart");
-        if (remainingSeconds > 0f) running = true;
         isDragging = true;
+
+        // カウントダウン一時停止（キッチンタイマーを巻いている間は停止する想定）
+        bool wasRunning = running;
+        running = false;
+
+        // 直前の状態を保存
+        startRemainingSeconds = remainingSeconds;
+        accumulatedWindSeconds = 0f;
+
+        // 直近角度初期化
+        prevAngleCW = AngleFrom12Clockwise(GetPointerFromCenter(e.position));
+
+        // 再開予定のフラグは不要。DragEndで remaining を確定して start する。
     }
-    private static float AngleFrom12Clockwise(Vector2 fromCenter)
-    {
-        // 通常のatan2はx基準(右が0°、反時計回りが正)なので
-        // 12時基準/時計回り正にするため xとyを入れ替えつつ符号を反転
-        float deg = -Mathf.Atan2(fromCenter.x, fromCenter.y) * Mathf.Rad2Deg;
-        return Mathf.Repeat(deg, 360f);
-    }
+
     public void OnDragUpdate(PointerEventData e)
     {
-        Debug.Log("OnDragUpdate");
         if (!isDragging) return;
 
-        Vector2 to = e.position - new Vector2(dialAxis.position.x, dialAxis.position.y);
+        // 現在角度（12時基準/時計回りが正）
+        float angleCW = AngleFrom12Clockwise(GetPointerFromCenter(e.position));
 
-        // 現在角度(12時基準/時計回り正)
-        float angleCW = AngleFrom12Clockwise(to);
-
-        // 前フレーム→現在の最短角度差（符号付き, -180〜+180）
+        // 最短角度差（-180〜+180）
         float deltaDeg = Mathf.DeltaAngle(prevAngleCW, angleCW);
         prevAngleCW = angleCW;
 
-        // 時計回りのみを「ゼンマイを巻く」とみなすなら Max(0, deltaDeg)
-        // 双方向で時間を増減させたいなら ↓の行のコメントアウトを外し、上をコメントアウトする
-        //float windDeg = Mathf.Max(0f, deltaDeg);
-        float windDeg = deltaDeg;
+        // 角度→秒に変換して累積（時計回りで+、反時計回りで-）
+        accumulatedWindSeconds += deltaDeg * SecondsPerDegree;
 
-        // 角度→秒に変換して累積
-        accumulatedWindSeconds += windDeg * SecondsPerDegree;
-        SetTimer(accumulatedWindSeconds/360f*-1f);
-        // プレビュー用の残り時間（0〜maxSecondsにクランプ）
+        // プレビュー（0〜maxにクランプ）
         float previewSeconds = Mathf.Clamp(startRemainingSeconds + accumulatedWindSeconds, 0f, maxSeconds);
 
-        // 正規化してダイヤル更新（0〜1）
-        float normalized = previewSeconds / maxSeconds;
-        //Debug.Log(normalized);
-
+        // ダイアルに即時反映（プレビュー）
+        ApplyDialFromSeconds(previewSeconds);
     }
-    public void OnDragEnd()
+
+    public void OnDragEnd(PointerEventData e)
     {
-        Debug.Log("OnDragEnd");
-        if (!dragging) return;
-        dragging = false;
+        if (!isDragging) return;
+        isDragging = false;
 
-        if (accumulatedWindSeconds > 0f)
-        {
-            SetTimer(accumulatedWindSeconds);
-            accumulatedWindSeconds = 0f;
-        }
+        // ドラッグで確定した残り時間をセット
+        float newSeconds = Mathf.Clamp(startRemainingSeconds + accumulatedWindSeconds, 0f, maxSeconds);
+        accumulatedWindSeconds = 0f;
 
+        remainingSeconds = newSeconds;
+
+        // 0より大きければ、ここから自動で「12時へ戻る＝減っていく」挙動（Update内）を開始
+        running = remainingSeconds > 0f;
+
+        // 針の初期位置を合わせておく
+        ApplyDialFromSeconds(remainingSeconds);
+
+        // 毎秒イベントの起点を同期
+        lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
     }
-    private void StartCountdown()
+
+    //=== Utility ============================================================
+
+    // 12時基準/時計回り正の角度取得
+    private static float AngleFrom12Clockwise(Vector2 fromCenter)
     {
-        // 実際のタイマー開始ロジック
+        float deg = Mathf.Atan2(fromCenter.x, fromCenter.y) * Mathf.Rad2Deg;
+        return Mathf.Repeat(deg, 360f);
     }
 
-    private void SetTimer(float t)
+    // 中心からポインタへのベクトル（スクリーン座標前提）
+    private Vector2 GetPointerFromCenter(Vector2 pointerScreenPos)
     {
-        Debug.Log("t=" + t);
-        // t=1（満タン）で最大角、t=0で12時（0度）へ
-        float angle = -1 * t*360; // 反時計回りをマイナスにする例
-        dialVisual.localEulerAngles = new Vector3(0f, 0f, angle);
+        Vector2 center = dialAxis != null
+            ? (Vector2)dialAxis.position
+            : (Vector2)dialVisual.position;
+
+        return pointerScreenPos - center;
     }
+
+    // 残り秒からダイアルの角度に反映（t=0で12時, t=maxで-360°）
+    private void ApplyDialFromSeconds(float seconds)
+    {
+        float t01 = (maxSeconds <= 0f) ? 0f : Mathf.Clamp01(seconds / maxSeconds*0.5f);
+        float angleZ = -t01 * 360f;
+        dialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ);
+    }
+
+    //=== Public API（任意で使いたい場合） ==================================
+
+    public void SetRemainingTime(float seconds, bool startImmediately = true)
+    {
+        remainingSeconds = Mathf.Clamp(seconds, 0f, maxSeconds);
+        ApplyDialFromSeconds(remainingSeconds);
+        running = startImmediately && remainingSeconds > 0f;
+        lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
+    }
+
+    public void Stop()
+    {
+        running = false;
+    }
+
+    public float RemainingSeconds => remainingSeconds;
+    public bool IsRunning => running;
 }

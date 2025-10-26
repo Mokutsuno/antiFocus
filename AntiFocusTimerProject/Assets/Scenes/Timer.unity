@@ -703,10 +703,10 @@ RectTransform:
   m_GameObject: {fileID: 172759849}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1995228333}
+  m_Father: {fileID: 218548145}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -790,6 +790,7 @@ RectTransform:
   - {fileID: 802800831}
   - {fileID: 948646584}
   - {fileID: 1798469990}
+  - {fileID: 172759850}
   - {fileID: 1995228333}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2111,15 +2112,15 @@ RectTransform:
   m_GameObject: {fileID: 958205468}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 651803941}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 80}
-  m_SizeDelta: {x: 25, y: 200}
+  m_AnchoredPosition: {x: 0, y: 62}
+  m_SizeDelta: {x: 107.8, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &958205471
 MonoBehaviour:
@@ -2148,7 +2149,7 @@ MonoBehaviour:
   m_FillMethod: 4
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &958205472
@@ -4143,10 +4144,9 @@ RectTransform:
   m_GameObject: {fileID: 1995228332}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 172759850}
   - {fileID: 651803941}
   - {fileID: 1446361509}
   - {fileID: 375963405}
@@ -4188,7 +4188,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   dialVisual: {fileID: 651803941}
-  secondsPerDegree: 10
   dialAxis: {fileID: 1446361509}
 --- !u!114 &1995228336
 MonoBehaviour:

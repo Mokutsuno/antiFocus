@@ -20,7 +20,7 @@ public class TimerHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        timerController.OnDragEnd();
+        timerController.OnDragEnd(eventData);
     }
 
     /*
