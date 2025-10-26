@@ -2,7 +2,7 @@
 // 目的：DialController の clickStepDegrees / minAngle / maxAngle に基づいて
 //       Scene ビュー上に「クリック境界（等角度の目盛り）」を表示する。
 // 使い方：DialController と同じ GameObject に付け、必要なら半径や色を調整。
-
+/*
 using UnityEngine;
 
 [ExecuteAlways]
@@ -116,3 +116,4 @@ public class DialGizmoVisualizer : MonoBehaviour
     }
 #endif
 }
+*/

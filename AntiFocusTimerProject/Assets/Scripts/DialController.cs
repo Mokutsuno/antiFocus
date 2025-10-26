@@ -166,7 +166,7 @@ public class DialController : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     }
 }
 */
-
+/*
 // ファイル: DialController.cs
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -174,7 +174,7 @@ using UnityEngine.EventSystems;
 public class DialController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     [Header("Refs")]
-    public Timer timer;
+    /// public Timer timer;
     public Transform dialVisual; // ダイアル見た目（回転させるTransform）
 
     [Header("Mapping")]
@@ -228,7 +228,7 @@ public class DialController : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
         if (accumulatedWindSeconds > 0f)
         {
-            timer.SetTime(accumulatedWindSeconds);
+            timer.SetTimer(accumulatedWindSeconds);
             accumulatedWindSeconds = 0f;
         }
     }
@@ -243,7 +243,8 @@ public class DialController : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     private void SetDialByNormalized(float t)
     {
         // t=1（満タン）で最大角、t=0で12時（0度）へ
-        float angle = -maxSweepDegrees * t; // 反時計回りをマイナスにする例
+        float angle = -1 * t; // 反時計回りをマイナスにする例
         dialVisual.localEulerAngles = new Vector3(0f, 0f, angle);
     }
 }
+*/

@@ -1692,7 +1692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 651803941}
   m_Layer: 0
-  m_Name: DialAxis
+  m_Name: DialVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2912,6 +2912,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1446361508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1446361509}
+  m_Layer: 0
+  m_Name: DialAxis
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1446361509
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446361508}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1995228333}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1470396317
 GameObject:
   m_ObjectHideFlags: 0
@@ -4088,9 +4123,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1995228333}
   - component: {fileID: 1995228334}
-  - component: {fileID: 1995228335}
   - component: {fileID: 1995228336}
+  - component: {fileID: 1995228335}
   - component: {fileID: 1995228337}
+  - component: {fileID: 1995228338}
   m_Layer: 0
   m_Name: AntiFocusTimer
   m_TagString: Untagged
@@ -4112,6 +4148,7 @@ RectTransform:
   m_Children:
   - {fileID: 172759850}
   - {fileID: 651803941}
+  - {fileID: 1446361509}
   - {fileID: 375963405}
   - {fileID: 1792354428}
   m_Father: {fileID: 218548145}
@@ -4138,13 +4175,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1995228332}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa7b03b046c064a41b42cc03be56dd56, type: 3}
+  m_Script: {fileID: 11500000, guid: c6693e77f06ae83439f3e2f8a179c4b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: {fileID: 1995228337}
+  maxSeconds: 3600
+  remainingSeconds: 0
+  running: 0
+  onElapsed:
+    m_PersistentCalls:
+      m_Calls: []
+  onTickIntSeconds:
+    m_PersistentCalls:
+      m_Calls: []
   dialVisual: {fileID: 651803941}
-  maxSweepDegrees: 360
   secondsPerDegree: 10
+  dialAxis: {fileID: 1446361509}
 --- !u!114 &1995228336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4152,18 +4197,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1995228332}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cd0f66f921681144a00d58418d0384f, type: 3}
+  m_Script: {fileID: 11500000, guid: 250c900aba1094442adc0a02ebeb8909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialController: {fileID: 1995228335}
-  dialOrigin: {fileID: 651803941}
-  radiusOverride: 112.6
-  tickLength: 22.2
-  rimColor: {r: 1, g: 1, b: 1, a: 0.35}
-  tickColor: {r: 1, g: 0.65, b: 0, a: 0.9}
-  showLabels: 1
+  timerController: {fileID: 1995228335}
 --- !u!114 &1995228337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4176,14 +4215,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7477298cfdcd3542893c943e4fbd917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSeconds: 3600
-  allowWindWhileRunning: 1
   remainingSeconds: 0
   running: 0
-  onElapsed:
+--- !u!114 &1995228338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995228332}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a36ca34d8e678e44493b1dcfa883e300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialRotator: {fileID: 1995228333}
+  angleOrigin: {fileID: 1995228333}
+  uiCamera: {fileID: 1249010370}
+  zeroOffsetDeg: 0
+  minAngle: -360
+  maxAngle: 0
+  clickStepDegrees: 36
+  returnSpeed: 10
+  OnRatchet:
     m_PersistentCalls:
       m_Calls: []
-  onTickIntSeconds:
+  OnDialedNumber:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &2113060786

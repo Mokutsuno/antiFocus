@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{70760914-4A02-4EF6-8B55-1B5C9CE5F014}</ProjectGuid>
+    <ProjectGuid>{62C194CD-38C5-74BB-9805-10BB8C10EAEA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -62,13 +62,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DialDragHandler.cs" />
+    <Compile Include="Assets\Scripts\DialDragToTime.cs" />
     <Compile Include="Assets\Scripts\UIBindings.cs" />
+    <Compile Include="Assets\Scripts\AntiFocusTimerController.cs" />
     <Compile Include="Assets\Scripts\SessionLogger1.cs" />
+    <Compile Include="Assets\Scripts\TimerController.cs" />
     <Compile Include="Assets\Scripts\DialGizmoVisualizer.cs" />
+    <Compile Include="Assets\Scripts\AntiFocusTimer.cs" />
     <Compile Include="Assets\Scripts\DialController.cs" />
     <Compile Include="Assets\Scripts\FocusTimerController.cs" />
+    <Compile Include="Assets\Scripts\TimerIHandler.cs" />
     <Compile Include="Assets\Scripts\SessionLogger.cs" />
     <Compile Include="Assets\Scripts\BreakOverlayController.cs" />
+    <Compile Include="Assets\Scripts\IcountdownTimer.cs" />
     <Compile Include="Assets\Scripts\AnalogClock.cs" />
     <Compile Include="Assets\Scripts\TImer.cs" />
   </ItemGroup>

@@ -1,52 +1,62 @@
-// ƒtƒ@ƒCƒ‹: KitchenTimer.cs
+ï»¿// ãƒ•ã‚¡ã‚¤ãƒ«: KitchenTimer.cs
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Timer : MonoBehaviour
 {
     [Header("Settings")]
-    [Tooltip("Šª‚¯‚éÅ‘åŠÔi•bj")]
-    public float maxSeconds = 3600f; // 60•ª
-    [Tooltip("‘–s’†‚ÌèŠª‚«‹–‰ÂiƒLƒbƒ`ƒ“ƒ^ƒCƒ}[À‹@‚ÉŠñ‚¹‚é‚È‚ç truej")]
-    public bool allowWindWhileRunning = true;
+  //  [Tooltip("å·»ã‘ã‚‹æœ€å¤§æ™‚é–“ï¼ˆç§’ï¼‰")]
+  //  public float maxSeconds = 3600f; // 60åˆ†
+   // [Tooltip("è§’åº¦â†’ç§’ã®æ›ç®—ã€‚ä¾‹: 360åº¦=3600ç§’ãªã‚‰ 10sec/degã€‚")]
+   // public float secondsPerDegree = 10f;
+    [Tooltip("èµ°è¡Œä¸­ã®æ‰‹å·»ãè¨±å¯ï¼ˆã‚­ãƒƒãƒãƒ³ã‚¿ã‚¤ãƒãƒ¼å®Ÿæ©Ÿã«å¯„ã›ã‚‹ãªã‚‰ trueï¼‰")]
+  //  public bool allowWindWhileRunning = true;
 
     [Header("State (ReadOnly)")]
     [SerializeField] private float remainingSeconds;
     [SerializeField] private bool running;
 
-    [Header("Events")]
-    public UnityEvent onElapsed;
-    public UnityEvent<int> onTickIntSeconds; // –ˆ•b‚Ì®”ƒJƒEƒ“ƒg—pi”CˆÓj
+
+    //[SerializeField] private bool secondsPerDegree;
 
 
-    public float RemainingSeconds => remainingSeconds;
-    public float Normalized => maxSeconds <= 0f ? 0f : Mathf.Clamp01(remainingSeconds / maxSeconds);
+
+
+    //  [Header("Events")]
+    //  public UnityEvent onElapsed;
+    //  public UnityEvent<int> onTickIntSeconds; // æ¯ç§’ã®æ•´æ•°ã‚«ã‚¦ãƒ³ãƒˆç”¨ï¼ˆä»»æ„ï¼‰
+
+    private int lastEmittedWhole;
+
+   // public float RemainingSeconds => remainingSeconds;
+  //  public float Normalized => maxSeconds <= 0f ? 0f : Mathf.Clamp01(remainingSeconds / maxSeconds);
     public bool IsRunning => running;
-
-    public void SetTime(float seconds)
+    /*
+    public void SetTimer(float seconds)
     {
         if (!running || allowWindWhileRunning)
         {
             remainingSeconds = Mathf.Clamp(remainingSeconds + Mathf.Max(0f, seconds), 0f, maxSeconds);
-            // ‘–‚Á‚Ä‚¢‚È‚¯‚ê‚ÎAŠª‚¢‚½‚ç©“®‚Å‘–‚ç‚¹‚éiD‚İ‚Åj
+            // èµ°ã£ã¦ã„ãªã‘ã‚Œã°ã€å·»ã„ãŸã‚‰è‡ªå‹•ã§èµ°ã‚‰ã›ã‚‹ï¼ˆå¥½ã¿ã§ï¼‰
             if (!running && remainingSeconds > 0f) StartTimer();
         }
-    }
-
+    }*/
+    /*
     public void StartTimer()
     {
         if (remainingSeconds > 0f) running = true;
-    }
-
+    }*/
+    /*
     public void StopTimer() => running = false;
-
+    */
+    /*
     public void ResetTimer()
     {
         running = false;
         remainingSeconds = 0f;
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
-    }
-
+    }*/
+    /*
     private void Update()
     {
         if (!running) return;
@@ -59,7 +69,7 @@ public class Timer : MonoBehaviour
                 running = false;
                 onElapsed?.Invoke();
             }
-            // –ˆ•bƒCƒxƒ“ƒgi”CˆÓj
+            // æ¯ç§’ã‚¤ãƒ™ãƒ³ãƒˆï¼ˆä»»æ„ï¼‰
             int nowWhole = Mathf.CeilToInt(remainingSeconds);
             if (nowWhole != lastEmittedWhole)
             {
@@ -68,4 +78,5 @@ public class Timer : MonoBehaviour
             }
         }
     }
+    */
 }
