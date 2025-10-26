@@ -18,7 +18,6 @@ public class Timer : MonoBehaviour
     public UnityEvent onElapsed;
     public UnityEvent<int> onTickIntSeconds; // 毎秒の整数カウント用（任意）
 
-    private int lastEmittedWhole;
 
     public float RemainingSeconds => remainingSeconds;
     public float Normalized => maxSeconds <= 0f ? 0f : Mathf.Clamp01(remainingSeconds / maxSeconds);
