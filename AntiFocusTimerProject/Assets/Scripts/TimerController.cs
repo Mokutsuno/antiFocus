@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-
+using UnityEngine.UI;
+[RequireComponent (typeof(AudioSource))]
 public class TimerController : MonoBehaviour
 {
     [Header("Settings")]
@@ -21,9 +24,13 @@ public class TimerController : MonoBehaviour
     [Tooltip("タイマーの軸の中心（UIの場合にRectTransformで指定）")]
     public RectTransform dialAxis;
 
+    public AudioSource tickAudioSource;
+    public AudioSource bellAudioSource;
+
+    public Text text;
     // 内部
     private Camera uiCam;                        // 必要なら割当（UIカメラ/メインカメラ）
-    private int lastEmittedWhole;
+    private int lastEmittedWhole;               //キッチンタイマーのように時間がカウントダウンしていくときに、1秒ごとにイベントを発火させるために使われています。
 
     // ドラッグ関連
     private bool isDragging;
@@ -34,16 +41,30 @@ public class TimerController : MonoBehaviour
     // 1度あたりの秒（maxSeconds を 360度に割り当て）
     private float SecondsPerDegree => maxSeconds / 360f;
 
+   
     private void Awake()
     {
+      //  tickAudioSource = GetComponent<AudioSource>();
+
+       // text.text = WriteTimeFormat(remainingSeconds);
         if (dialVisual == null) dialVisual = transform;
         uiCam = Camera.main;
         ApplyDialFromSeconds(remainingSeconds);
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
     }
 
+    //floatの値をタイム表記の文字列で返す
+    public static string WriteTimeFormat(float time)
+    {
+        string timeString = string.Format("{0:D2}:{1:D2}:{2:D2}",
+            (int)time / 60,
+            (int)time % 60,
+            (int)(time * 100) % 60);
+        return timeString;
+    }
     private void Update()
     {
+        text.text = WriteTimeFormat(remainingSeconds);
         if (!running) return;
 
         if (remainingSeconds > 0f)
@@ -53,6 +74,7 @@ public class TimerController : MonoBehaviour
             {
                 remainingSeconds = 0f;
                 running = false;
+                bellAudioSource.Play();
                 onElapsed?.Invoke();
             }
 
@@ -63,6 +85,7 @@ public class TimerController : MonoBehaviour
             int nowWhole = Mathf.CeilToInt(remainingSeconds);
             if (nowWhole != lastEmittedWhole)
             {
+                tickAudioSource.Play();
                 lastEmittedWhole = nowWhole;
                 onTickIntSeconds?.Invoke(Mathf.Max(0, nowWhole));
             }
@@ -73,6 +96,7 @@ public class TimerController : MonoBehaviour
 
     public void OnDragStart(PointerEventData e)
     {
+        bellAudioSource.Stop();
         isDragging = true;
 
         // カウントダウン一時停止（キッチンタイマーを巻いている間は停止する想定）
@@ -129,6 +153,7 @@ public class TimerController : MonoBehaviour
 
         // 毎秒イベントの起点を同期
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
+
     }
 
     //=== Utility ============================================================
@@ -154,6 +179,11 @@ public class TimerController : MonoBehaviour
     private void ApplyDialFromSeconds(float seconds)
     {
         float t01 = (maxSeconds <= 0f) ? 0f : Mathf.Clamp01(seconds / maxSeconds*0.5f);
+        if(t01 == 0)
+        {
+           //tickudioSource.PlayOneShot(soundBell);
+
+        }
         float angleZ = -t01 * 360f;
         dialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ);
     }
