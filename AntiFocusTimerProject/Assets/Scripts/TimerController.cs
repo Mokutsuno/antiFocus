@@ -9,7 +9,7 @@ public class TimerController : MonoBehaviour
 {
     [Header("Settings")]
     [Tooltip("巻ける最大時間（秒）")]
-    public float maxSeconds;
+    float maxSeconds = 3600f;
 
     [Header("State (ReadOnly)")]
     [SerializeField] private float remainingSeconds; // 残り時間
@@ -20,7 +20,9 @@ public class TimerController : MonoBehaviour
     public UnityEvent<int> onTickIntSeconds;     // 毎秒コールバック（任意）
 
     [Header("Refs")]
-    public Transform dialVisual;                 // ダイアル見た目（回転させるTransform）
+    public Transform secDialVisual;                 // ダイアル見た目（回転させるTransform）
+    public Transform minDialVisual;                 // ダイアル見た目（回転させるTransform）
+    public Transform hourDialVisual;                 // ダイアル見た目（回転させるTransform）
     [Tooltip("タイマーの軸の中心（UIの場合にRectTransformで指定）")]
     public RectTransform dialAxis;
 
@@ -47,7 +49,7 @@ public class TimerController : MonoBehaviour
       //  tickAudioSource = GetComponent<AudioSource>();
 
        // text.text = WriteTimeFormat(remainingSeconds);
-        if (dialVisual == null) dialVisual = transform;
+      //  if (dialVisual == null) dialVisual = transform;
         uiCam = Camera.main;
         ApplyDialFromSeconds(remainingSeconds);
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
@@ -79,6 +81,7 @@ public class TimerController : MonoBehaviour
             }
 
             // ダイアルを残り時間に合わせて戻す（＝キッチンタイマーの針が12時に戻る）
+            ApplyDialFromSeconds(remainingSeconds);
             ApplyDialFromSeconds(remainingSeconds);
 
             // 毎秒イベント（任意）
@@ -168,10 +171,10 @@ public class TimerController : MonoBehaviour
     // 中心からポインタへのベクトル（スクリーン座標前提）
     private Vector2 GetPointerFromCenter(Vector2 pointerScreenPos)
     {
-        Vector2 center = dialAxis != null
-            ? (Vector2)dialAxis.position
-            : (Vector2)dialVisual.position;
-
+        //Vector2 center = dialAxis != null
+        //   ? (Vector2)dialAxis.position
+        // : (Vector2)dialVisual.position;
+        Vector2 center = dialAxis.position;
         return pointerScreenPos - center;
     }
 
@@ -185,9 +188,10 @@ public class TimerController : MonoBehaviour
 
         }
         float angleZ = -t01 * 360f;
-        dialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ);
+        secDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*3600*2);
+        minDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*60*2);
+        hourDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*2);
     }
-
     //=== Public API（任意で使いたい場合） ==================================
 
     public void SetRemainingTime(float seconds, bool startImmediately = true)
