@@ -23,6 +23,7 @@ public class TimerController : MonoBehaviour
     public Transform secDialVisual;                 // ダイアル見た目（回転させるTransform）
     public Transform minDialVisual;                 // ダイアル見た目（回転させるTransform）
     public Transform hourDialVisual;                 // ダイアル見た目（回転させるTransform）
+    public Transform keepDialVisual;                 // ダイアル見た目（回転させるTransform）
     [Tooltip("タイマーの軸の中心（UIの場合にRectTransformで指定）")]
     public RectTransform dialAxis;
 
@@ -71,7 +72,7 @@ public class TimerController : MonoBehaviour
 
         if (remainingSeconds > 0f)
         {
-            remainingSeconds -= Time.deltaTime;
+            remainingSeconds -= Time.deltaTime*10;
             if (remainingSeconds <= 0f)
             {
                 remainingSeconds = 0f;
@@ -99,8 +100,9 @@ public class TimerController : MonoBehaviour
 
     public void OnDragStart(PointerEventData e)
     {
-        bellAudioSource.Stop();
         isDragging = true;
+        bellAudioSource.Stop();
+
 
         // カウントダウン一時停止（キッチンタイマーを巻いている間は停止する想定）
         bool wasRunning = running;
@@ -191,6 +193,7 @@ public class TimerController : MonoBehaviour
         secDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*3600*2);
         minDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*60*2);
         hourDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*2);
+        if(isDragging&&!running) keepDialVisual.localEulerAngles = new Vector3(0f, 0f, angleZ*2);
     }
     //=== Public API（任意で使いたい場合） ==================================
 
