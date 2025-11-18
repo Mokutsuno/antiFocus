@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{62C194CD-38C5-74BB-9805-10BB8C10EAEA}|Assembly-CSharp.csproj|e:\\project2025\\antifocus\\antifocustimerproject\\assets\\scripts\\uiintegerupscale.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{62C194CD-38C5-74BB-9805-10BB8C10EAEA}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\uiintegerupscale.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{62C194CD-38C5-74BB-9805-10BB8C10EAEA}|Assembly-CSharp.csproj|e:\\project2025\\antifocus\\antifocustimerproject\\assets\\scripts\\timercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{62C194CD-38C5-74BB-9805-10BB8C10EAEA}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\timercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{62C194CD-38C5-74BB-9805-10BB8C10EAEA}|Assembly-CSharp.csproj|E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\assets\\scripts\\windowutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{62C194CD-38C5-74BB-9805-10BB8C10EAEA}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\windowutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,12 +27,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "UIIntegerUpscale.cs",
+              "DocumentMoniker": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\Assets\\Scripts\\UIIntegerUpscale.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\UIIntegerUpscale.cs",
+              "ToolTip": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\Assets\\Scripts\\UIIntegerUpscale.cs",
+              "RelativeToolTip": "Assets\\Scripts\\UIIntegerUpscale.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAwFUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-04T04:07:20.186Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WindowUtil.cs",
+              "DocumentMoniker": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\Assets\\Scripts\\WindowUtil.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\WindowUtil.cs",
+              "ToolTip": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\Assets\\Scripts\\WindowUtil.cs",
+              "RelativeToolTip": "Assets\\Scripts\\WindowUtil.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-04T03:04:00.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "TimerController.cs",
               "DocumentMoniker": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\Assets\\Scripts\\TimerController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TimerController.cs",
               "ToolTip": "E:\\Project2025\\antiFocus\\AntiFocusTimerProject\\Assets\\Scripts\\TimerController.cs",
               "RelativeToolTip": "Assets\\Scripts\\TimerController.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAQwGQAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAcwLYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-26T04:53:37.675Z",
               "EditorCaption": ""

@@ -66,9 +66,11 @@
     <Compile Include="Assets\Scripts\UIBindings.cs" />
     <Compile Include="Assets\Scripts\AntiFocusTimerController.cs" />
     <Compile Include="Assets\Scripts\SessionLogger1.cs" />
+    <Compile Include="Assets\Scripts\UIIntegerScaler.cs" />
     <Compile Include="Assets\Scripts\TimerController.cs" />
     <Compile Include="Assets\Scripts\DialGizmoVisualizer.cs" />
     <Compile Include="Assets\Scripts\AntiFocusTimer.cs" />
+    <Compile Include="Assets\Scripts\WindowUtil.cs" />
     <Compile Include="Assets\Scripts\DialController.cs" />
     <Compile Include="Assets\Scripts\FocusTimerController.cs" />
     <Compile Include="Assets\Scripts\TimerIHandler.cs" />

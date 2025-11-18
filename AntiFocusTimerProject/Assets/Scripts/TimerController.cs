@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 [RequireComponent (typeof(AudioSource))]
 public class TimerController : MonoBehaviour
 {
+   // public WindowsAppManager winAppManager;
+    [SerializeField] private Text textLog;
     [Header("Settings")]
     [Tooltip("巻ける最大時間（秒）")]
     float maxSeconds = 3600f;
@@ -30,7 +33,7 @@ public class TimerController : MonoBehaviour
     public AudioSource tickAudioSource;
     public AudioSource bellAudioSource;
 
-    public Text text;
+    public Text textTime;
     // 内部
     private Camera uiCam;                        // 必要なら割当（UIカメラ/メインカメラ）
     private int lastEmittedWhole;               //キッチンタイマーのように時間がカウントダウンしていくときに、1秒ごとにイベントを発火させるために使われています。
@@ -44,13 +47,18 @@ public class TimerController : MonoBehaviour
     // 1度あたりの秒（maxSeconds を 360度に割り当て）
     private float SecondsPerDegree => maxSeconds / 360f;
 
+    private bool isFirstSetTimer = true;
    
+    private int initialScreenWidth ;
+    private int initialScreenHeight;
     private void Awake()
     {
-      //  tickAudioSource = GetComponent<AudioSource>();
+        initialScreenWidth = Screen.width;
+        initialScreenHeight = Screen.height;
+        //  tickAudioSource = GetComponent<AudioSource>();
 
-       // text.text = WriteTimeFormat(remainingSeconds);
-      //  if (dialVisual == null) dialVisual = transform;
+        // text.text = WriteTimeFormat(remainingSeconds);
+        //  if (dialVisual == null) dialVisual = transform;
         uiCam = Camera.main;
         ApplyDialFromSeconds(remainingSeconds);
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
@@ -67,18 +75,21 @@ public class TimerController : MonoBehaviour
     }
     private void Update()
     {
-        text.text = WriteTimeFormat(remainingSeconds);
+        if (isFirstSetTimer) return;
+        textTime.text = WriteTimeFormat(remainingSeconds);
         if (!running) return;
 
         if (remainingSeconds > 0f)
         {
-            remainingSeconds -= Time.deltaTime*10;
+            remainingSeconds -= Time.deltaTime;
             if (remainingSeconds <= 0f)
             {
                 remainingSeconds = 0f;
                 running = false;
                 bellAudioSource.Play();
                 onElapsed?.Invoke();
+                WindowUtil.BringOwnWindowToFront();
+                ToggleFullScreen(true);
             }
 
             // ダイアルを残り時間に合わせて戻す（＝キッチンタイマーの針が12時に戻る）
@@ -100,6 +111,9 @@ public class TimerController : MonoBehaviour
 
     public void OnDragStart(PointerEventData e)
     {
+
+        ToggleFullScreen(false);
+
         isDragging = true;
         bellAudioSource.Stop();
 
@@ -141,6 +155,7 @@ public class TimerController : MonoBehaviour
 
     public void OnDragEnd(PointerEventData e)
     {
+        isFirstSetTimer = false;
         if (!isDragging) return;
         isDragging = false;
 
@@ -158,9 +173,19 @@ public class TimerController : MonoBehaviour
 
         // 毎秒イベントの起点を同期
         lastEmittedWhole = Mathf.CeilToInt(remainingSeconds);
+        // Alt + Enter で切り替える例
 
+        
     }
 
+    public void ToggleFullScreen(bool isFullScreen)
+    {
+
+        textLog.text += "\nToggle full screen";
+        Screen.SetResolution(initialScreenWidth,initialScreenHeight, isFullScreen);
+        Screen.fullScreen = isFullScreen;
+        
+    }
     //=== Utility ============================================================
 
     // 12時基準/時計回り正の角度取得
